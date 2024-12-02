@@ -33,27 +33,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with: 
-           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Deployment part  
-        run: |
-         sudo ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
-         cd /home/deployerdev/coding/projects/primelogic-solutions/
-
-         # Pull latest changes
-         git pull origin main
-
-         # Install dependencies
-         pnpm install --frozen-lockfile
-
-         # Build the project
-         pnpm build
-
-         # Restart the service using PM2 or systemd
-         pm2 restart my-backend || pm2 start dist/src/server.js --name "my-backend"
-         pm2 save 
-         EOF
+        run: touch test.txt
 
 
 
