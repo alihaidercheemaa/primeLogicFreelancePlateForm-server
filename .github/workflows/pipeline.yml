@@ -1,17 +1,26 @@
+name: Build and Deploy Pipeline
+#Trigger will work only when the code is pushed to the branch.
 on:
  push:
   branches:
     - main
 
 jobs:
-  testing:
+  build:
    runs-on: ubuntu-latest
    steps:
-      - name: Deploy to my server
-        uses: appleboy/ssh-action@master
+      # Checkout Repo
+      - name: Checkout code 
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            touch test.txt
+          node-version: 18
+          
+      # Installing pnpm package 
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build project
+        run: pnpm run build
