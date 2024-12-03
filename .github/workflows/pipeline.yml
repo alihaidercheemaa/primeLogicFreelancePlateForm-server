@@ -1,5 +1,5 @@
 
-name: Deploy to VPS
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,25 +7,48 @@ on:
       - main  # Change to your deployment branch if needed
 
 jobs:
+  build:
+   runs-on: ubuntu-latest
+   steps:
+      # Checkout Repo
+      - name: Checkout code 
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          
+      # Installing pnpm package 
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build project
+        run: pnpm run build
+  
   deploy:
+    name: Deploy to server 
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
     # Step 1: Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v3
-
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+         node-version: 18
     # Step 2: Set up SSH
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    # Step 3: Deploy to VPS
-    - name: Deploy Code to VPS
+    # Step 3: Deploy to server
+    - name: Deployment to server
       run: |
         ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
-        cd /home/deployerdev/coding/projects/primelogic-solutions/backend/
+        cd /home/deployerdev/coding/projects/primelogic-solutions/
 
         # Pull latest changes
         git pull origin main
@@ -37,6 +60,6 @@ jobs:
         pnpm build
 
         # Restart the service using PM2 or systemd
-        pm2 restart my-backend || pm2 start dist/src/server.js --name "my-backend"
+        pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
         pm2 save 
         EOF
