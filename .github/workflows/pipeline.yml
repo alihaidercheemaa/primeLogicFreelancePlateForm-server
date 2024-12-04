@@ -35,8 +35,8 @@ jobs:
       # Step 2: Set up SSH
       - name: Set up SSH key for deployment
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/deployerdev/.ssh.ssh/id_ed25519
-          chmod 600 ~/deployerdev/.ssh.ssh/id_ed25519  # Set the correct permissions for the private key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/deployerdev/.ssh/id_ed25519
+          chmod 600 ~/deployerdev/.ssh/id_ed25519  # Set the correct permissions for the private key
       
       - name: Deploy to server
         run: |
