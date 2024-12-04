@@ -33,28 +33,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       # Step 2: Set up SSH
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Deployment part  
+      - name: Set up SSH key for deployment
         run: |
-         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
-         cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1
-
-         # Pull latest changes
-         git pull origin main
-
-         # Install dependencies
-         pnpm install --frozen-lockfile
-
-         # Build the project
-         pnpm build
-
-         # Restart the service using PM2 or systemd
-         pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
-         pm2 save 
-         EOF 
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/deployerdev/.ssh.ssh/id_ed25519
+          chmod 600 ~/deployerdev/.ssh.ssh/id_ed25519  # Set the correct permissions for the private key
+      
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1 && git pull origin main" 
          
 
 
