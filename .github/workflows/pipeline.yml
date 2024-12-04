@@ -35,13 +35,14 @@ jobs:
       # Step 2: Set up SSH
       - name: Set up SSH key for deployment
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519  # Set the correct permissions for the private key
-      
+         mkdir -p ~/.ssh  # Ensure the .ssh directory exists
+         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519  # Use the raw SSH private key
+         chmod 600 ~/.ssh/id_ed25519  # Set the correct permissions for the private key
+         ssh-keyscan -H 69.48.206.67 >> ~/.ssh/known_hosts  # Add the server to known_hosts
+
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1 && git pull origin main" 
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1 && git pull origin main" 
          
 
 
