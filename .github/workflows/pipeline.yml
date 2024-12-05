@@ -50,7 +50,7 @@ jobs:
            pnpm install --frozen-lockfile
 
            # Build the project
-           pnpm build
+           pnpm run build
 
            # Restart the service using PM2 or systemd
            pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
