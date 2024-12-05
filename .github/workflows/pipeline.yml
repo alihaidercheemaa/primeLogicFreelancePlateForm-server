@@ -61,7 +61,7 @@ jobs:
       # Step 4: start pm2 installation
       - name: start pm2 
         run: |
-           pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
+           pm2 restart primelogicsolutionbackendserver || pm2 start dist/src/server.js --name "primelogicsolutionbackendserver"
            pm2 save 
            EOF
           
