@@ -36,14 +36,26 @@ jobs:
       - name: Set up SSH key for deployment
         run: |
          mkdir -p ~/.ssh  # Ensure the .ssh directory exists
-         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519  # Use the raw SSH private key
-         chmod 600 ~/.ssh/id_ed25519  # Set the correct permissions for the private key
-         ssh-keyscan -H 69.48.206.67 >> ~/.ssh/known_hosts  # Add the server to known_hosts
+         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519  # Using the raw SSH private key
+         chmod 600 ~/.ssh/id_ed25519  # Setting the correct permissions for the private key
+         ssh-keyscan -H 69.48.206.67 >> ~/.ssh/known_hosts  # Adding the server to known_hosts
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1"
-          touch test.txt
+           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1"
+           # Pull latest changes
+           git pull origin main
+
+           # Install dependencies
+           pnpm install --frozen-lockfile
+
+           # Build the project
+           pnpm build
+
+           # Restart the service using PM2 or systemd
+           pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
+           pm2 save 
+           EOF
           
          
 
