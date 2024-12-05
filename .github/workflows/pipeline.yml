@@ -47,10 +47,10 @@ jobs:
            git pull origin main
 
            # Install dependencies
-           pnpm install --frozen-lockfile
+           npm install --frozen-lockfile
 
            # Build the project
-           pnpm run build
+           npm run build
 
            # Restart the service using PM2 or systemd
            pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
