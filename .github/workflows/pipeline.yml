@@ -42,7 +42,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1" << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1"
           touch test.txt
           
          
