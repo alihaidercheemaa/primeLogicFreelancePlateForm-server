@@ -48,6 +48,7 @@ jobs:
 
            # Install pnpm
            npm install -g pnpm
+           pnpm add -g pm2
            
            # Install dependencies
            pnpm install --frozen-lockfile
