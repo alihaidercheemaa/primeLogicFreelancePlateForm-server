@@ -48,6 +48,8 @@ jobs:
 
            # Install pnpm
            npm install -g pnpm
+
+           # Install PM2
            pnpm add -g pm2
            
            # Install dependencies
@@ -56,7 +58,7 @@ jobs:
            # Build the project
            pnpm run build
 
-           # Restart the service using PM2 or systemd
+           # Restart the service using PM2
            pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
            pm2 save 
            EOF
