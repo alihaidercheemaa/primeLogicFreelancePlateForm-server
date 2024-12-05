@@ -51,14 +51,12 @@ jobs:
           # Set the PNPM_HOME environment variable
           echo "PNPM_HOME=/home/runner/.pnpm-global" >> $GITHUB_ENV
           echo "/home/runner/.pnpm-global/bin" >> $GITHUB_PATH
-
-      # Step 2: Install global dependencies
-      - name: Install pm2 globally
-        run: pnpm add -g pm2
-
+          pnpm add -g pm2
+          
       # Step 3: Install project dependencies
       - name: Install project dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --frozen-lockfile
 
       # Step 4: Verify pm2 installation
       - name: Verify and restarting pm2 
