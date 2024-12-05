@@ -1,0 +1,73 @@
+name: Build and Deploy Pipeline
+#Trigger will work only when the code is pushed to the branch.
+on:
+ push:
+  branches:
+    - main
+
+jobs:
+  build:
+   runs-on: ubuntu-latest
+   steps:
+      # Checkout Repo
+      - name: Checkout code 
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          
+      # Installing pnpm package 
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build project
+        run: pnpm run build
+        
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      # Step 2: Set up SSH
+      - name: Set up SSH key for deployment
+        run: |
+         mkdir -p ~/.ssh  # Ensure the .ssh directory exists
+         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519  # Using the raw SSH private key
+         chmod 600 ~/.ssh/id_ed25519  # Setting the correct permissions for the private key
+         ssh-keyscan -H 69.48.206.67 >> ~/.ssh/known_hosts  # Adding the server to known_hosts
+
+      - name: Deploy to server
+        run: |
+           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1"
+           git pull origin main
+
+      - name: Install pnpm and set PNPM_HOME
+        run: |
+           corepack enable
+          
+      # Step 3: Install project dependencies
+      - name: Install project dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          
+      - name: Installing pm2
+        run: |
+          npm install -g pm2
+
+      # Step 4: start pm2 installation
+      - name: start pm2 
+        run: |
+           pm2 restart primelogicsolutionbackendserver || pm2 start --name "primelogicsolutionbackendserver"
+           pm2 save 
+           EOF
+          
+         
+
+
+
+
+     
