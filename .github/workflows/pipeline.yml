@@ -43,20 +43,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1" << 'EOF'
+          touch test.txt
           
-          # Pull latest changes
-          git pull origin main
-
-          # Install dependencies
-          pnpm install --frozen-lockfile
-
-          # Build the project
-          pnpm build
-
-          # Restart the service using PM2 or systemd
-          pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
-          pm2 save 
-          EOF
          
 
 
