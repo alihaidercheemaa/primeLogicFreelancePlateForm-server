@@ -43,22 +43,26 @@ jobs:
       - name: Deploy to server
         run: |
            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deployerdev@69.48.206.67 "cd /home/deployerdev/coding/projects/primelogic-solutions/backend_instance_1"
-           # Pull latest changes
            git pull origin main
 
-           # Install pnpm
-           npm install -g pnpm
+      - name: Install pnpm and set PNPM_HOME
+        run: |
+          npm install -g pnpm
+          # Set the PNPM_HOME environment variable
+          echo "PNPM_HOME=/home/runner/.pnpm-global" >> $GITHUB_ENV
 
-           # Install PM2
-           pnpm add -g pm2
-           
-           # Install dependencies
-           pnpm install --frozen-lockfile
+      # Step 2: Install global dependencies
+      - name: Install pm2 globally
+        run: pnpm add -g pm2
 
-           # Build the project
-           pnpm run build
+      # Step 3: Install project dependencies
+      - name: Install project dependencies
+        run: pnpm install --frozen-lockfile
 
-           # Restart the service using PM2
+      # Step 4: Verify pm2 installation
+      - name: Verify and restarting pm2 
+        run: |
+           pm2 -v
            pm2 restart fiver-clone || pm2 start dist/src/server.js --name "fiver-clone"
            pm2 save 
            EOF
