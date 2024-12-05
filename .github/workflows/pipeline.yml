@@ -47,11 +47,7 @@ jobs:
 
       - name: Install pnpm and set PNPM_HOME
         run: |
-          npm install -g pnpm
-          # Set the PNPM_HOME environment variable
-          echo "PNPM_HOME=/home/runner/.pnpm-global" >> $GITHUB_ENV
-          echo "/home/runner/.pnpm-global/bin" >> $GITHUB_PATH
-          pnpm add -g pm2
+           corepack enable
           
       # Step 3: Install project dependencies
       - name: Install project dependencies
