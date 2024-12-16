@@ -61,8 +61,11 @@ jobs:
       # Step 4: start pm2 installation
       - name: start pm2 
         run: |
-           pm2 restart API || pm2 start --name "API"
-           pm2 save 
+           - name: Deploy Application with PM2
+           # Navigate to the correct directory where the ecosystem.config.js is located
+           cd /home/deployerdev/.nvm/versions/node/v22.11.0/lib/node_modules/pm2/lib/templates/sample-apps/http-server
+           pm2 start ecosystem.config.js --env production
+           pm2 save
            EOF
           
          
