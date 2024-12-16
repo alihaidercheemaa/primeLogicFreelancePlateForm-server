@@ -61,7 +61,7 @@ jobs:
       # Step 4: start pm2 installation
       - name: start pm2 
         run: |
-           pm2 restart backend-pls-8000 || pm2 start --name "backend-pls-8000"
+           pm2 restart API || pm2 start --name "API"
            pm2 save 
            EOF
           
