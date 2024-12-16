@@ -62,8 +62,8 @@ jobs:
       - name: start pm2 
         run: |
            # Navigate to the correct directory where the ecosystem.config.js is located
-           cd /home/deployerdev/.nvm/versions/node/v22.11.0/lib/node_modules/pm2/lib/templates/sample-apps/http-server
-           pm2 start ecosystem.config.js --env production
+           cd /home/deployerdev/.nvm/versions/node/v22.11.0/lib/node_modules/pm2/lib/templates/sample-apps/http-server/ecosystem.config,js
+           pm2 start /home/deployerdev/.nvm/versions/node/v22.11.0/lib/node_modules/pm2/lib/templates/sample-apps/http-server/ecosystem.config.js --env production
            pm2 save
            EOF
           
